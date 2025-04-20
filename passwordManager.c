@@ -56,7 +56,7 @@ int main(){
             fgets(keyword, sizeof(keyword), stdin);
             keyword[strcspn(keyword, "\n")] = 0;
 
-            while (fgets(line, sizeof(line), fp)) {
+            while (fgets(line, sizeof(line), fp)) { // logic for finding keyword, skipping current and following two lines when writing to tmp.txt
                 if (!skip && strstr(line, keyword)){
                     skip = 3;
                     continue;
@@ -89,16 +89,16 @@ int main(){
             int found = 0;
             skip = 0;
         
-            while (fgets(line, sizeof(line), fp)) {
-                if (!skip && strstr(line, keyword)) {
-                    skip = 3;
-                    found = 1;
+            while (fgets(line, sizeof(line), fp)) { // reads one line at a time, continues as long as fgets successfully reads a line (until EOF)
+                if (!skip && strstr(line, keyword)) { // checks if we are not skipping lines, the current line contains keyword, checks if keyword string exists anywhere in line
+                    skip = 3; // if statement above is true, skip the current and following two lines
+                    found = 1; // if keyword is found, set to 1 for future logic
                     printf("\n Match found for \"%s\":\n", keyword);
                     printf("-----------------------------------\n");
                     printf("%s", line);
                     continue;
                 }
-                if (skip > 0) {
+                if (skip > 0) { // Once we are in "skip mode" decrement skip to track how many lines are left, print each line until statement isn't true
                     skip--;
                     printf("%s", line);
                 }
