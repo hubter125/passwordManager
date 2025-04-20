@@ -76,7 +76,43 @@ int main(){
 
             break;
         case 4:
+            fp = fopen("password.txt", "r");
+            if (fp == NULL) {
+                perror("Failed to open file");
+                break;
+            }
+        
+            printf("Enter the site name to search: ");
+            fgets(keyword, sizeof(keyword), stdin);
+            keyword[strcspn(keyword, "\n")] = 0;
+        
+            int found = 0;
+            skip = 0;
+        
+            while (fgets(line, sizeof(line), fp)) {
+                if (!skip && strstr(line, keyword)) {
+                    skip = 3;
+                    found = 1;
+                    printf("\n Match found for \"%s\":\n", keyword);
+                    printf("-----------------------------------\n");
+                    printf("%s", line);
+                    continue;
+                }
+                if (skip > 0) {
+                    skip--;
+                    printf("%s", line);
+                }
+            }
+        
+            if (!found) {
+                printf("\n No entry found for \"%s\".\n", keyword);
+            } else {
+                printf("-----------------------------------\n");
+            }
+        
+            fclose(fp);
             break;
+        
         default:
             printf("You did not choose a valid operation.\n");
     }   
